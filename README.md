@@ -49,7 +49,7 @@ The current DST implementation still has problems with numerical stability.  Whi
 The Coupling Constant
 ---------------------
 
-The DST uses a _coupling constant_ _μ0_ that determines how much influence the next sample has and how fast the contribution of past samples fades out.  That way, the coupling constant somewhat can be compared to the turnover frequency _τ_ in a low pass filter.  The following series of spectrum views depicts the behavior of the DST for varying values of the coupling constant.  The diagrams show the spectrum with the time axis from top to down, and the frequency axis from left to right.  The value of _μ0_ must be less than 1 for the integral of the DST transformation to converge.  The higher the value, the greater the influence of past samples is retained, but also the slower the DST reacts to quick changes in the spectrum, as the following figures show for several values of _μ0_.
+The DST uses a _coupling constant_ _μ0_, a dimensionless quantity that determines how much influence the next sample has and how fast the contribution of past samples fades out.  That way, the coupling constant somewhat can be compared to the turnover frequency _τ_ in a low pass filter.  The following series of spectrum views depicts the behavior of the DST for varying values of the coupling constant.  The diagrams show the spectrum with the time axis from top to down, and the frequency axis from left to right.  The value of _μ0_ must be less than 1 for the integral of the DST transformation to converge.  The higher the value, the greater the influence of past samples is retained, but also the slower the DST reacts to quick changes in the spectrum, as the following figures show for several values of _μ0_.
 
 <p>
   <figure>
@@ -98,7 +98,7 @@ The DST uses a _coupling constant_ _μ0_ that determines how much influence the 
   Fig. 1: DST Convergence for Combined 440Hz+880Hz Sine Waves @ 44.1kHz Sample Frequency
 </p>
 
-The figures suggest that the value of the coupling constant should be greater than 0.99 in order to retrieve good accuracy, but values greater than 0.999 do not add much more to it, but degrade responsiveness in the case of a quickly changing spectrum.  Hence, a good trade-off between accuracy and responsiveness (this a kind of uncertainty relation!) is a value inbetween, e.g. the value _1-α_ with _α_ := _1-_ Rt150 _(1/3)_, where Rt150 _(x)_ denotes the 150th root of _x_, i.e. Rt150 _(x)_ := exp _(1 / 150 \*_ log _(x))_.
+The figures suggest that the value of the coupling constant should be greater than 0.99 in order to retrieve good accuracy, but values greater than 0.999 do not add much more to it, but degrade responsiveness in the case of a quickly changing spectrum.  Hence, a good trade-off between accuracy and responsiveness (this is a kind of uncertainty relation!) is a value inbetween, e.g. the value _1-α_ with _α_ := _1-_ Rt150 _(1/3)_, where Rt150 _(x)_ denotes the 150th root of _x_, i.e. Rt150 _(x)_ := exp _(1 / 150 \*_ log _(x))_.
 
 For a more comprehensive discussion of the mathematics behind the DST, see the article of my presentation at the Linux Audio Conference LAC2009 [1].
 
