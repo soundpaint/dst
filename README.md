@@ -49,7 +49,7 @@ The current DST implementation still has problems with numerical stability.  Whi
 The Coupling Constant
 ---------------------
 
-The DST uses a _coupling constant_ _μ0_ that determines how much influence the next sample has and how fast the contribution of past samples fades out.  That way, the coupling constant somewhat can be compared to the turnover frequency _τ_ in a low pass filter.  The following series of spectrum views depicts the behavior of the DST for varying values of the coupling constant.  Its value must be less than 1 for the integral of the DST transformation to converge.  The higher the value, the greater the influence of past samples is retained, but also the slower the DST reacts to quick changes in the spectrum, as the following figures show for several values of _μ0_.
+The DST uses a _coupling constant_ _μ0_ that determines how much influence the next sample has and how fast the contribution of past samples fades out.  That way, the coupling constant somewhat can be compared to the turnover frequency _τ_ in a low pass filter.  The following series of spectrum views depicts the behavior of the DST for varying values of the coupling constant.  The diagrams show the spectrum with the time axis from top to down, and the frequency axis from left to right.  The value of _μ0_ must be less than 1 for the integral of the DST transformation to converge.  The higher the value, the greater the influence of past samples is retained, but also the slower the DST reacts to quick changes in the spectrum, as the following figures show for several values of _μ0_.
 
 <p>
   <figure>
