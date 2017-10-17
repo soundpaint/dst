@@ -53,7 +53,7 @@ The DST uses a _coupling constant_ _μ0_ that determines how much influence the 
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_090000.ppm" alt="spectrum at μ0=0.9" width="200" />
+    <img src="media/spectrum_dst_090000.png" alt="spectrum at μ0=0.9" width="200" />
     <figcaption>Fig. 1a: μ0=0.9</figcaption>
   </figure>
 </p>
@@ -62,7 +62,7 @@ The DST uses a _coupling constant_ _μ0_ that determines how much influence the 
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_099000.ppm" alt="spectrum at μ0=0.99" width="200" />
+    <img src="media/spectrum_dst_099000.png" alt="spectrum at μ0=0.99" width="200" />
     <figcaption>Fig. 1b: μ0=0.99</figcaption>
   </figure>
 </p>
@@ -71,7 +71,7 @@ The DST uses a _coupling constant_ _μ0_ that determines how much influence the 
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_099900.ppm" alt="spectrum at μ0=0.999" width="200" />
+    <img src="media/spectrum_dst_099900.png" alt="spectrum at μ0=0.999" width="200" />
     <figcaption>Fig. 1c: μ0=0.999</figcaption>
   </figure>
 </p>
@@ -80,7 +80,7 @@ The DST uses a _coupling constant_ _μ0_ that determines how much influence the 
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_099990.ppm" alt="spectrum at μ0=0.9999" width="200" />
+    <img src="media/spectrum_dst_099990.png" alt="spectrum at μ0=0.9999" width="200" />
     <figcaption>Fig. 1d: μ0=0.9999</figcaption>
   </figure>
 </p>
@@ -89,7 +89,7 @@ The DST uses a _coupling constant_ _μ0_ that determines how much influence the 
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_099999.ppm" alt="spectrum at μ0=0.99999" width="200" />
+    <img src="media/spectrum_dst_099999.png" alt="spectrum at μ0=0.99999" width="200" />
     <figcaption>Fig. 1e: μ0=0.99999</figcaption>
   </figure>
 </p>
