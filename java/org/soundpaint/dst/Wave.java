@@ -33,6 +33,12 @@ import java.io.IOException;
  */
 public interface Wave {
   /**
+   * Resets this wave to its start, such that the next sample returned
+   * will be again the first one.
+   */
+  void reset() throws IOException;
+
+  /**
    * @return The next sample value of the series.
    */
   double getNextSample() throws IOException;

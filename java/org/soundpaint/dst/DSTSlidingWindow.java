@@ -33,15 +33,14 @@ public class DSTSlidingWindow implements SlidingWindowTransform
   private final static double DEFAULT_α =
     1.0 - Math.exp(1.0 / 150.0 * Math.log(1.0 / 3.0));
 
-  private final static double DEFAULT_μ0 = 1.0 - DEFAULT_α;
-  //private final static double DEFAULT_μ0 = 0.90000;
+  public final static double DEFAULT_μ0 = 1.0 - DEFAULT_α;
 
   // @TODO: Clarify: Shall μ(FREQ) = μ0 be frequency dependent?
   // E.g. something like μ(FREQ) = 1.0 - Math.exp(FREQ *
   // Math.log(μ0))?
 
-  private final static double DEFAULT_LOWER_BOUND = 0.001;
-  private final static double DEFAULT_UPPER_BOUND = 0.2;
+  public final static double DEFAULT_LOWER_BOUND = 0.001;
+  public final static double DEFAULT_UPPER_BOUND = 0.2;
 
   private double μ0;
   private int size;

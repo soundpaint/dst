@@ -29,23 +29,15 @@ package org.soundpaint.dst;
 public class SinoidalSynthWave implements Wave {
 
   private final double[] deltaPhases;
+  private double[] initialPhases;
   private double[] phases;
 
   public SinoidalSynthWave(final double[] deltaPhases,
                            final double[] initialPhases) {
     this.deltaPhases = deltaPhases;
+    this.initialPhases = initialPhases;
     this.phases = new double[deltaPhases.length];
-    if (initialPhases != null) {
-      if (phases.length != initialPhases.length) {
-        final String message =
-          String.format("sizes of arrays do not match: %d != %d",
-                        phases.length, initialPhases.length);
-          throw new IllegalArgumentException(message);
-      }
-      for (int i = 0; i < initialPhases.length; i++) {
-        phases[i] = initialPhases[i];
-      }
-    }
+    reset();
   }
 
   public SinoidalSynthWave(final double sampleRate, final double[] frequencies)
@@ -67,6 +59,25 @@ public class SinoidalSynthWave implements Wave {
       deltaPhases[i] = 2.0 * Math.PI * frequencies[i] / sampleRate;
     }
     return deltaPhases;
+  }
+
+  public void reset()
+  {
+    if (initialPhases != null) {
+      if (phases.length != initialPhases.length) {
+        final String message =
+          String.format("sizes of arrays do not match: %d != %d",
+                        phases.length, initialPhases.length);
+          throw new IllegalArgumentException(message);
+      }
+      for (int i = 0; i < phases.length; i++) {
+        phases[i] = initialPhases[i];
+      }
+    } else {
+      for (int i = 0; i < phases.length; i++) {
+        phases[i] = 0.0;
+      }
+    }
   }
 
   public double getPhase(final int index)

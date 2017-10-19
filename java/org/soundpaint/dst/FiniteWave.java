@@ -52,12 +52,6 @@ public abstract class FiniteWave implements Wave {
   }
 
   /**
-   * Resets this finite wave to its start, such that the bnext sample
-   * returned will be again the first one.
-   */
-  abstract void reset() throws IOException;
-
-  /**
    * Skips @code{n} samples.
    */
   abstract void skip(long n) throws IOException;
