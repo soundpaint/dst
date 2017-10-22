@@ -48,13 +48,13 @@ The current DST implementation still has problems with numerical stability.  Whi
 The Coupling Constant
 ---------------------
 
-The DST uses a _coupling constant_ _μ0_, a dimensionless quantity that determines how much influence the next sample has and how fast the contribution of past samples fades out.  One can think of a strong correlation between the coupling constant and the turnover frequency _τ_ in a low pass filter, especially if implemented as a discrete infinite impulse response filter.
+The DST uses a _coupling constant_ named _μ0_, a dimensionless quantity that determines how much influence the next sample has and how fast the contribution of past samples fades out.  One can think of a strong correlation between the coupling constant and the turnover frequency _τ_ in a low pass filter, especially if implemented as a discrete infinite impulse response filter.
 
 The following series of spectrum views depicts the behavior of the DST for varying values of the coupling constant.  The diagrams show the spectrum with the time axis from top to down, and the frequency axis from left to right.  The value of _μ0_ must be less than 1 for the integral of the DST transformation to converge.  The higher the value, the greater the influence of past samples is retained, but also the slower the DST reacts to quick changes in the spectrum, as the following figures show for several values of _μ0_.
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_090000.png" alt="spectrum at μ0=0.9" width="200" />
+    <img src="media/spectrum_dst_0.90000.png" alt="spectrum at μ0=0.9" width="200" />
     <figcaption>Fig. 1a: μ0=0.9</figcaption>
   </figure>
 </p>
@@ -63,7 +63,7 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_099000.png" alt="spectrum at μ0=0.99" width="200" />
+    <img src="media/spectrum_dst_0.99000.png" alt="spectrum at μ0=0.99" width="200" />
     <figcaption>Fig. 1b: μ0=0.99</figcaption>
   </figure>
 </p>
@@ -72,7 +72,7 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_099900.png" alt="spectrum at μ0=0.999" width="200" />
+    <img src="media/spectrum_dst_0.99900.png" alt="spectrum at μ0=0.999" width="200" />
     <figcaption>Fig. 1c: μ0=0.999</figcaption>
   </figure>
 </p>
@@ -81,7 +81,7 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_099990.png" alt="spectrum at μ0=0.9999" width="200" />
+    <img src="media/spectrum_dst_0.99990.png" alt="spectrum at μ0=0.9999" width="200" />
     <figcaption>Fig. 1d: μ0=0.9999</figcaption>
   </figure>
 </p>
@@ -90,7 +90,7 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_099999.png" alt="spectrum at μ0=0.99999" width="200" />
+    <img src="media/spectrum_dst_0.99999.png" alt="spectrum at μ0=0.99999" width="200" />
     <figcaption>Fig. 1e: μ0=0.99999</figcaption>
   </figure>
 </p>
@@ -101,11 +101,23 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 
 The figures suggest that the value of the coupling constant should be greater than 0.99 in order to retrieve good accuracy, but values greater than 0.999 do not add much more to it, but degrade responsiveness in the case of a quickly changing spectrum.  Hence, a good trade-off between accuracy and responsiveness (this is a kind of uncertainty relation!) is a value inbetween, e.g. the value _1-α_ with _α_ := _1 -_ rt150 _(1/3)_, where rt150 _(x)_ denotes the 150th root of _x_, i.e. rt150 _(x)_ := exp _(1 / 150 \*_ log _(x))_.  Thus, the expression results in _α ≈ 0.0007297326_ or _μ0 ≈ 0.992702673_.
 
-For a more comprehensive discussion of the mathematics behind the DST, see the article of my presentation at the Linux Audio Conference LAC2009 [Reuter:2009a].
+Sliding Window DFT Implementation
+---------------------------------
 
-[TODO: Compile a list of errata that I meanwhile found in the conference article.]
+For better comparison, the library not only features the DST implementation, but also comprehends a sliding window implementation of a DFT.  This DFT implementation keeps track of all sample values in the window with a ring buffer: each time a new sample is added to the window, the oldest one is kicked off.  No Gaussian or other filter is applied.  Note that this DFT implementation is feasible only for small window sizes due to the ring buffer.  The DST does not need such a ring buffer, since instead, old samples are faded out.  Since in this DFT implementation old samples are not faded out until they fall off from the window, new incoming samples affect the overall spectrum of the DFT much less.  As a consequence, the DFT responses much more slowly to quick changes in the spectrum.  For steady signals however, this DFT implementation works almost equally well compared to the DST, while still having the overhead of keeping track of all samples in the window.
+
+<p>
+  <figure>
+    <img src="media/spectrum_dft.png" alt="spectrum at μ0=0.99999" width="200" />
+    <figcaption>Fig. 2: Sliding Window DFT</figcaption>
+  </figure>
+</p>
 
 References
 ----------
+
+For a more comprehensive discussion of the mathematics behind the DST, see the article of my presentation at the Linux Audio Conference LAC2009 [Reuter:2009a].
+
+[TODO: Compile a list of errata that I meanwhile found in the conference article.]
 
 [Reuter:2009a] Jürgen Reuter. _Considering Transient Effect in Spectrum Analysis._ In _Proceedings of the 7th International Linux Audio Conference (LAC2009)._ Instituzione Casa della Musica, Parma, Italy. Grafiche Step, Parma, Italy, pp. 153—160, April 16th—19th, 2009.  [download](media/lac2009_spectral_transform.pdf).

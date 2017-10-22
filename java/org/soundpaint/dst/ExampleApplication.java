@@ -41,8 +41,8 @@ public class ExampleApplication
   public final static int WINDOW_SIZE = 2048;
   public final static int ROUNDS = 2048;
   public final static String IMAGE_WAVE_PLOT_FILENAME = "wave.plot.data";
-  public final static String IMAGE_DFT_SPECTRUM_FILENAME = "spectrum_dft.ppm";
-  public final static String IMAGE_DST_SPECTRUM_FILENAME = "spectrum_dst.ppm";
+  public final static String DEFAULT_DFT_IMAGE_FILENAME = "spectrum_dft.ppm";
+  public final static String DEFAULT_DST_IMAGE_FILENAME = "spectrum_dst.ppm";
   private final static double doublePI = 2.0 * Math.PI;
   private final static double invPI = 1.0 / Math.PI;
 
@@ -51,6 +51,102 @@ public class ExampleApplication
   private final static boolean CREATE_PLOT = false;
 
   private Date startDate, stopDate;
+
+  private static class Arguments
+  {
+    private boolean dft, dst;
+    private boolean inputWaveFileNamePending, inputWaveFileNameParsed;
+    private String inputWaveFileName;
+    private boolean outFileNamePending, outFileNameParsed;
+    private String outFileName;
+    private boolean μ0Pending, μ0Parsed;
+    private double μ0;
+
+    private Arguments()
+    {
+    }
+
+    public Arguments(final String[] argv)
+    {
+      this();
+      parse(argv);
+    }
+
+    private void parse(final String argv[]) {
+      for (int argPos = 0; argPos < argv.length; argPos++) {
+        String arg = argv[argPos];
+        if (μ0Pending) {
+          try {
+            μ0 = Double.parseDouble(arg);
+            μ0Parsed = true;
+            μ0Pending = false;
+          } catch (Exception e) {
+            throw new IllegalArgumentException("value for μ0 is not a valid double");
+          }
+        } else if (inputWaveFileNamePending) {
+          inputWaveFileName = arg;
+          inputWaveFileNameParsed = true;
+          inputWaveFileNamePending = false;
+        } else if (outFileNamePending) {
+          outFileName = arg;
+          outFileNameParsed = true;
+          outFileNamePending = false;
+        } else if ("--dft".equals(arg)) {
+          if (dft == true) {
+            throw new IllegalArgumentException("--dft seen twice");
+          }
+          dft = true;
+        } else if ("--dst".equals(arg)) {
+          if (dst == true) {
+            throw new IllegalArgumentException("--dst seen twice");
+          }
+          dst = true;
+        } else if ("--mu0".equals(arg)) {
+          if (μ0Parsed) {
+            throw new IllegalArgumentException("--mu0 seen twice");
+          }
+          μ0Pending = true;
+        } else if ("--inputwavefile".equals(arg)) {
+          if (inputWaveFileNameParsed) {
+            throw new IllegalArgumentException("--inputwavefile seen twice");
+          }
+          inputWaveFileNamePending = true;
+        } else if ("--out".equals(arg)) {
+          if (outFileNameParsed) {
+            throw new IllegalArgumentException("--out seen twice");
+          }
+          outFileNamePending = true;
+        }
+      }
+    }
+
+    private void check() {
+      if (dst && dft) {
+        throw new IllegalArgumentException("--dst and --dft can not be specified together");
+      }
+      if (!dst && !dft) {
+        throw new IllegalArgumentException("either --dft or --dst must be specified");
+      }
+      if (!dst && μ0Parsed) {
+        throw new IllegalArgumentException("--mu0 specified without --dst");
+      }
+      if ((μ0 <= 0.0) || (μ0 >= 1.0)) {
+        throw new IllegalArgumentException("μ0 must be greater than 0 and less than 1");
+      }
+    }
+
+    public String getInputWaveFileName() {
+      return inputWaveFileName;
+    }
+
+    public String getOutFileName() {
+      return outFileName;
+    }
+
+    public double getμ0() {
+      return μ0;
+    }
+  }
 
   /**
    * Holds all data that is shared between the progress display and
@@ -81,22 +177,25 @@ public class ExampleApplication
     }
   }
 
-  public void createDFTView(Wave wave) throws IOException
+  public void createDFTView(String dftImageFileName, Wave wave)
+    throws IOException
   {
     wave.reset();
-    PPMStreamOutput imageDFTSpectrum;
+    PPMStreamOutput imageDFTStream;
     PrintWriter imageWavePlotter;
     if (CREATE_PLOT) {
+      String imageWavePlotFilename =
+        IMAGE_WAVE_PLOT_FILENAME; // TODO: Add as command line arg
       System.out.printf("[writing wave plot data to file '%s']\r\n",
-			IMAGE_WAVE_PLOT_FILENAME);
+			imageWavePlotFilename);
       imageWavePlotter =
-	new PrintWriter(IMAGE_WAVE_PLOT_FILENAME);
+	new PrintWriter(imageWavePlotFilename);
     }
     if (CREATE_DFT_PPM) {
       System.out.printf("[writing DFT spectrum image to file '%s']\r\n",
-			IMAGE_DFT_SPECTRUM_FILENAME);
-      imageDFTSpectrum =
-	new PPMStreamOutput(IMAGE_DFT_SPECTRUM_FILENAME, WINDOW_SIZE, ROUNDS);
+			dftImageFileName);
+      imageDFTStream =
+	new PPMStreamOutput(dftImageFileName, WINDOW_SIZE, ROUNDS);
     }
     SlidingWindowTransform dftSlidingWindow =
       new DFTSlidingWindow(WINDOW_SIZE);
@@ -114,7 +213,7 @@ public class ExampleApplication
 	  Complex line = dftSlidingWindow.getLine(i);
 	  double value = line.getLength();
 	  double hue = (value - 0.5) * doublePI;
-	  imageDFTSpectrum.putPixel(hue, 1.0, 0.003 * value);
+	  imageDFTStream.putPixel(hue, 1.0, 0.003 * value);
 	}
       }
       double reconstructedDFTSample =
@@ -128,31 +227,30 @@ public class ExampleApplication
     progressInfo.sampleAndHold();
     System.out.println(progressInfo.getProgressDisplayValue());
     if (CREATE_DFT_PPM)
-      imageDFTSpectrum.close();
+      imageDFTStream.close();
     if (CREATE_PLOT)
       imageWavePlotter.close();
   }
 
-  public void createDSTView(int index, double μ0, Wave wave) throws IOException
+  public void createDSTView(String dstImageFileName, double μ0, Wave wave)
+    throws IOException
   {
     wave.reset();
-    PPMStreamOutput imageDSTSpectrum;
+    PPMStreamOutput imageDSTStream;
     PrintWriter imageWavePlotter;
     if (CREATE_PLOT) {
       String imageWavePlotFilename =
-        IMAGE_WAVE_PLOT_FILENAME + "_" + index;
+        IMAGE_WAVE_PLOT_FILENAME; // TODO: Add as command line arg
       System.out.printf("[writing wave plot data to file '%s']\r\n",
 			imageWavePlotFilename);
       imageWavePlotter =
 	new PrintWriter(imageWavePlotFilename);
     }
     if (CREATE_DST_PPM) {
-      String imageDstSpectrumFilename =
-        IMAGE_DST_SPECTRUM_FILENAME + "_" + index;
       System.out.printf("[writing DST spectrum image to file '%s']\r\n",
-			imageDstSpectrumFilename);
-      imageDSTSpectrum =
-	new PPMStreamOutput(imageDstSpectrumFilename, WINDOW_SIZE, ROUNDS);
+			dstImageFileName);
+      imageDSTStream =
+	new PPMStreamOutput(dstImageFileName, WINDOW_SIZE, ROUNDS);
     }
     SlidingWindowTransform dstSlidingWindow =
       new DSTSlidingWindow(μ0, WINDOW_SIZE,
@@ -172,7 +270,7 @@ public class ExampleApplication
 	  Complex line = dstSlidingWindow.getLine(i);
 	  double value = line.getLength();
 	  double hue = (value - 0.5) * doublePI;
-	  imageDSTSpectrum.putPixel(hue, 1.0, 0.05 * value);
+	  imageDSTStream.putPixel(hue, 1.0, 0.05 * value);
 	}
       }
       double reconstructedDSTSample =
@@ -186,7 +284,7 @@ public class ExampleApplication
     progressInfo.sampleAndHold();
     System.out.println(progressInfo.getProgressDisplayValue());
     if (CREATE_DST_PPM)
-      imageDSTSpectrum.close();
+      imageDSTStream.close();
     if (CREATE_PLOT)
       imageWavePlotter.close();
   }
@@ -205,27 +303,36 @@ public class ExampleApplication
     startDate = stopDate;
   }
 
-  public void run(Wave wave) throws IOException
+  public void run(final String[] argv) throws IOException
   {
+    Arguments args = new Arguments(argv);
+    final String inputWaveFileName = args.getInputWaveFileName();
+    final Wave wave;
+    if (inputWaveFileName != null) {
+      wave = new WaveFileReader(inputWaveFileName);
+    } else {
+      wave = DEFAULT_WAVE;
+    }
     markTime();
-    System.out.printf("[creating DFT]\r\n");
-    createDFTView(wave);
-    printElapsedAndMarkTime();
-    for (int i = 0; i < μ0s.length; i++) {
-      System.out.printf("[creating DST #%d of %d]\r\n", i + 1, μ0s.length);
-      createDSTView(i, μ0s[i], wave);
+    String outFileName = args.getOutFileName();
+    if (args.dft) {
+      System.out.printf("[creating DFT]\r\n");
+      createDFTView(outFileName != null ?
+                    outFileName :
+                    DEFAULT_DFT_IMAGE_FILENAME, wave);
+      printElapsedAndMarkTime();
+    } else if (args.dst) {
+      System.out.printf("[creating DST]\r\n");
+      createDSTView(outFileName != null ?
+                    outFileName :
+                    DEFAULT_DST_IMAGE_FILENAME, args.μ0, wave);
       printElapsedAndMarkTime();
     }
   }
 
-  public static void main(String argv[]) throws IOException
+  public static void main(String[] argv) throws IOException
   {
-    final Wave wave;
-    if (argv.length == 1)
-      wave = new WaveFileReader(argv[0]);
-    else
-      wave = DEFAULT_WAVE;
-    new ExampleApplication().run(wave);
+    new ExampleApplication().run(argv);
   }
 }
 
