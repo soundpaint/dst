@@ -55,7 +55,7 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 <p>
   <figure>
     <img src="media/spectrum_dst_0.90000.png" alt="DST spectrum at μ0=0.9" width="200" />
-    <figcaption>Fig. 1a: _μ0_=0.9</figcaption>
+    <figcaption>Fig. 1a: <i>μ0</i> = 0.9</figcaption>
   </figure>
 </p>
 
@@ -64,7 +64,7 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 <p>
   <figure>
     <img src="media/spectrum_dst_0.99000.png" alt="DST spectrum at μ0=0.99" width="200" />
-    <figcaption>Fig. 1b: _μ0_=0.99</figcaption>
+    <figcaption>Fig. 1b: <i>μ0</i> = 0.99</figcaption>
   </figure>
 </p>
 
@@ -73,7 +73,7 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 <p>
   <figure>
     <img src="media/spectrum_dst_0.99900.png" alt="DST spectrum at μ0=0.999" width="200" />
-    <figcaption>Fig. 1c: _μ0_=0.999</figcaption>
+    <figcaption>Fig. 1c: <i>μ0</i> = 0.999</figcaption>
   </figure>
 </p>
 
@@ -82,7 +82,7 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 <p>
   <figure>
     <img src="media/spectrum_dst_0.99990.png" alt="DST spectrum at μ0=0.9999" width="200" />
-    <figcaption>Fig. 1d: _μ0_=0.9999</figcaption>
+    <figcaption>Fig. 1d: <i>μ0</i> = 0.9999</figcaption>
   </figure>
 </p>
 
@@ -91,7 +91,7 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 <p>
   <figure>
     <img src="media/spectrum_dst_0.99999.png" alt="DST spectrum at μ0=0.99999" width="200" />
-    <figcaption>Fig. 1e: _μ0_=0.99999</figcaption>
+    <figcaption>Fig. 1e: <i>μ0</i> = 0.99999</figcaption>
   </figure>
 </p>
 
