@@ -54,8 +54,8 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_0.90000.png" alt="spectrum at μ0=0.9" width="200" />
-    <figcaption>Fig. 1a: μ0=0.9</figcaption>
+    <img src="media/spectrum_dst_0.90000.png" alt="DST spectrum at μ0=0.9" width="200" />
+    <figcaption>Fig. 1a: _μ0_=0.9</figcaption>
   </figure>
 </p>
 
@@ -63,8 +63,8 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_0.99000.png" alt="spectrum at μ0=0.99" width="200" />
-    <figcaption>Fig. 1b: μ0=0.99</figcaption>
+    <img src="media/spectrum_dst_0.99000.png" alt="DST spectrum at μ0=0.99" width="200" />
+    <figcaption>Fig. 1b: _μ0_=0.99</figcaption>
   </figure>
 </p>
 
@@ -72,8 +72,8 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_0.99900.png" alt="spectrum at μ0=0.999" width="200" />
-    <figcaption>Fig. 1c: μ0=0.999</figcaption>
+    <img src="media/spectrum_dst_0.99900.png" alt="DST spectrum at μ0=0.999" width="200" />
+    <figcaption>Fig. 1c: _μ0_=0.999</figcaption>
   </figure>
 </p>
 
@@ -81,8 +81,8 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_0.99990.png" alt="spectrum at μ0=0.9999" width="200" />
-    <figcaption>Fig. 1d: μ0=0.9999</figcaption>
+    <img src="media/spectrum_dst_0.99990.png" alt="DST spectrum at μ0=0.9999" width="200" />
+    <figcaption>Fig. 1d: _μ0_=0.9999</figcaption>
   </figure>
 </p>
 
@@ -90,8 +90,8 @@ The following series of spectrum views depicts the behavior of the DST for varyi
 
 <p>
   <figure>
-    <img src="media/spectrum_dst_0.99999.png" alt="spectrum at μ0=0.99999" width="200" />
-    <figcaption>Fig. 1e: μ0=0.99999</figcaption>
+    <img src="media/spectrum_dst_0.99999.png" alt="DST spectrum at μ0=0.99999" width="200" />
+    <figcaption>Fig. 1e: _μ0_=0.99999</figcaption>
   </figure>
 </p>
 
@@ -99,7 +99,7 @@ The following series of spectrum views depicts the behavior of the DST for varyi
   Fig. 1: DST Convergence for Combined 440Hz+880Hz Sine Waves @ 44.1kHz Sample Frequency
 </p>
 
-The figures suggest that the value of the coupling constant should be greater than 0.99 in order to retrieve good accuracy, but values greater than 0.999 do not add much more to it, but degrade responsiveness in the case of a quickly changing spectrum.  Hence, a good trade-off between accuracy and responsiveness (this is a kind of uncertainty relation!) is a value inbetween, e.g. the value _1-α_ with _α_ := _1 -_ rt150 _(1/3)_, where rt150 _(x)_ denotes the 150th root of _x_, i.e. rt150 _(x)_ := exp _(1 / 150 \*_ log _(x))_.  Thus, the expression results in _α ≈ 0.0007297326_ or _μ0 ≈ 0.992702673_.
+The figures suggest that the value of the coupling constant should be greater than 0.99 in order to retrieve good accuracy, but values greater than 0.999 do not add much more to it, but degrade responsiveness in the case of a quickly changing spectrum.  Hence, a good trade-off between accuracy and responsiveness (this is a kind of uncertainty relation!) is a value inbetween, e.g. the value _1-α_ with _α_ := _1 -_ 150√(1/3), where 150√(_x_) denotes the 150th root of _x_, i.e. 150√(_x_) := exp _(1 / 150 \*_ log _(x))_.  Thus, the expression results in _α ≈ 0.007297326_ or _μ0 ≈ 0.992702673_.
 
 Sliding Window DFT Implementation
 ---------------------------------
@@ -108,7 +108,7 @@ For better comparison, the library not only features the DST implementation, but
 
 <p>
   <figure>
-    <img src="media/spectrum_dft.png" alt="spectrum at μ0=0.99999" width="200" />
+    <img src="media/spectrum_dft.png" alt="DFT spectrum" width="200" />
     <figcaption>Fig. 2: Sliding Window DFT</figcaption>
   </figure>
 </p>
