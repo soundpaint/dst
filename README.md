@@ -122,7 +122,7 @@ Also note that the DST has some remarkable differences compared to the DFT:
 
 * The DFT's symmetry of cause and effect is mainly due to the symmetric bounds of the integral of the Fourier transform or the signal periodicity for a Fourier series.  In contrast, the integral of the DST is bound to (-∞,0], thus keeping direction of causality.
 
-* The Fourier transform abstracts from the signal's _t_ parameter, such that it does not occur any more in the transformed signal.  In contrast, the DST preserves the _t_ parameter, thus keeping an additional variable in the frequency space.  This additional variable can be viewed as a _hidden variable_ (in the sense as some authors assume for Quantum mechanics) of the Fourier transform, explicitly made accessible via the DST: For any point _t1_ in time, the DST for that point can be computed solely from the DST for any earlier point _t0_ in time and the signal between these two points _t0_ and _t1_, as shown in Equ. 24 in the paper in Sect. 4.3 “Discretization” [Reuter:2009a].  That is, the DST for _t0_ holds _all_ necessary information from the _complete_ history before _t0_ that is required for computing the DST of some later point _t1_.
+* The Fourier transform abstracts from the signal's _t_ parameter, such that it does not occur any more in the transformed signal.  In contrast, the DST preserves the _t_ parameter, thus keeping an additional variable in the frequency space.  This additional variable can be viewed as a _hidden variable_ (in the sense as some authors assume for Quantum mechanics) of the Fourier transform, explicitly made accessible via the DST: For any point _t1_ in time, the DST for that point can be computed solely from the DST for any earlier point _t0_ in time and the signal between these two points _t0_ and _t1_, as shown in Eqn. 24 in the paper in Sect. 4.3 “Discretization” [Reuter:2009a].  That is, the DST for _t0_ holds _all_ necessary information from the _complete_ history before _t0_ that is required for computing the DST of some later point _t1_.
 
 Future Work
 -----------
@@ -138,4 +138,4 @@ For a more comprehensive discussion of the mathematics behind the DST, see the a
 
 [Reuter:2009a] Jürgen Reuter.  _Considering Transient Effect in Spectrum Analysis._  In _Proceedings of the 7th International Linux Audio Conference (LAC2009)._  Instituzione Casa della Musica, Parma, Italy.  Grafiche Step, Parma, Italy, pp. 153—160, April 16th—19th, 2009.  [download](media/lac2009_spectral_transform.pdf).
 
-[Westerfeld:2018] Stefan Westerfeld.  _SpectMorph: Morphing the Timbre of Musical Instruments._  In _Proceddings of the 16th International Linux Audio Conference (LAC2018)._  c-base, Berlin.  Germany, pp. 5—12, June 7th—10th, 2018.
+[Westerfeld:2018] Stefan Westerfeld.  _SpectMorph: Morphing the Timbre of Musical Instruments._  In _Proceedings of the 16th International Linux Audio Conference (LAC2018)._  c-base, Berlin.  Germany, pp. 5—12, June 7th—10th, 2018.
