@@ -24,19 +24,18 @@
  * $Date$
  * $Id$
  */
-
 package org.soundpaint.dst;
 
 import java.io.PrintStream;
 
 public class DFTSlidingWindow implements SlidingWindowTransform
 {
-  private final static double DEFAULT_LOWER_BOUND = 0.001;
-  private final static double DEFAULT_UPPER_BOUND = 0.2;
+  public final static double DEFAULT_LOWER_BOUND = 0.001;
+  public final static double DEFAULT_UPPER_BOUND = 0.2;
 
   private int size;
   private double lowerBound, upperBound;
-  private MutableComplex dftWindow[];
+  private MutableComplex window[];
   private Complex signalWindow[];
   private Complex signalShift[];
   private Complex signalReverseShift[];
@@ -49,19 +48,23 @@ public class DFTSlidingWindow implements SlidingWindowTransform
     this(size, DEFAULT_LOWER_BOUND, DEFAULT_UPPER_BOUND);
   }
 
-  public DFTSlidingWindow(int size, double lowerBound, double upperBound)
+  public DFTSlidingWindow(int size,
+                          double lowerBound, double upperBound)
   {
     this();
-    assert size > 0 : "window size <= 0";
+    if (size <= 0)
+      throw new IllegalArgumentException("window size <= 0");
     this.size = size;
     this.lowerBound = lowerBound;
     this.upperBound = upperBound;
-    dftWindow = new MutableComplex[size];
-    for (int i = 0; i < size; i++)
-      dftWindow[i] = ComplexFactory.createMutableFromCartesian(0.0, 0.0);
+    window = new MutableComplex[size];
+    for (int i = 0; i < size; i++) {
+      window[i] = ComplexFactory.createMutableFromCartesian(0.0);
+    }
     signalWindow = new Complex[size];
-    for (int i = 0; i < size; i++)
-      signalWindow[i] = ComplexFactory.createFromCartesian(0.0, 0.0);
+    for (int i = 0; i < size; i++) {
+      signalWindow[i] = ComplexFactory.createFromCartesian(0.0);
+    }
     signalShift = new Complex[size];
     double bandWidthNatural = Math.log(upperBound / lowerBound);
     for (int i = 0; i < size; i++) {
@@ -106,10 +109,10 @@ public class DFTSlidingWindow implements SlidingWindowTransform
   public double distanceTo(DFTSlidingWindow other)
   {
     if (other.size != size)
-      throw new IllegalArgumentException("can not compare dft spectrum for windows of different size");
+      throw new IllegalArgumentException("can not compare spectrum for windows of different size");
     double sum = 0.0;
     for (int i = 0; i < size; i++) {
-      double diff = dftWindow[i].getLength() - other.dftWindow[i].getLength();
+      double diff = window[i].getLength() - other.window[i].getLength();
       sum += diff * diff;
     }
     return sum;
@@ -123,16 +126,16 @@ public class DFTSlidingWindow implements SlidingWindowTransform
     slidePos++;
     slidePos %= size;
     for (int i = 0; i < size; i++) {
-      dftWindow[i].sub(removeSample);
-      dftWindow[i].add(insertSample);
-      dftWindow[i].mul(signalShift[i]);
+      window[i].sub(removeSample);
+      window[i].add(insertSample);
+      window[i].mul(signalShift[i]);
     }
   }
 
   public Complex getLine(int index)
   {
     assert index >= 0 && index < size : "index out of range";
-    return dftWindow[index];
+    return window[index];
   }
 
   public double getReconstructedSample()
@@ -142,11 +145,12 @@ public class DFTSlidingWindow implements SlidingWindowTransform
 
   public double getReconstructedSample(TransferFunction filter)
   {
-    assert filter.getLength() == size : "bad filter length";
+    assert
+      (filter == null) || (filter.getLength() == size) : "bad filter length";
     MutableComplex sample = ComplexFactory.createMutableFromCartesian(0.0);
     for (int i = 0; i < size; i++) {
       MutableComplex line =
-	ComplexFactory.createMutableFromCartesian(dftWindow[i]);
+	ComplexFactory.createMutableFromCartesian(window[i]);
       line.mul(signalReverseShift[i]);
       if (filter != null) {
 	Complex transferValue =

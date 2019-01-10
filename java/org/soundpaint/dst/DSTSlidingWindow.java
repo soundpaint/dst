@@ -45,7 +45,7 @@ public class DSTSlidingWindow implements SlidingWindowTransform
   private double μ0;
   private int size;
   private double lowerBound, upperBound;
-  private MutableComplex dstWindow[],  tmpWindow[];
+  private MutableComplex window[];
   private Complex signalShift[];
 
   private DSTSlidingWindow() {}
@@ -73,11 +73,9 @@ public class DSTSlidingWindow implements SlidingWindowTransform
     this.size = size;
     this.lowerBound = lowerBound;
     this.upperBound = upperBound;
-    dstWindow = new MutableComplex[size];
-    tmpWindow = new MutableComplex[size];
+    window = new MutableComplex[size];
     for (int i = 0; i < size; i++) {
-      dstWindow[i] = ComplexFactory.createMutableFromCartesian(0.0);
-      tmpWindow[i] = ComplexFactory.createMutableFromCartesian(0.0);
+      window[i] = ComplexFactory.createMutableFromCartesian(0.0);
     }
     signalShift = new Complex[size];
     double bandWidthNatural = Math.log(upperBound / lowerBound);
@@ -88,12 +86,6 @@ public class DSTSlidingWindow implements SlidingWindowTransform
 	ComplexFactory.createFromPolar(μ0, -2.0 * Math.PI * frac);
     }
   }
-
-  public int getSize() { return size; }
-
-  public double getLowerBound() { return lowerBound; }
-
-  public double getUpperBound() { return upperBound; }
 
   public void printInfo(PrintStream out, double samplingFrequency)
   {
@@ -112,13 +104,19 @@ public class DSTSlidingWindow implements SlidingWindowTransform
     out.println("resolution [cent per spectral line]: " + resolution);
   }
 
+  public int getSize() { return size; }
+
+  public double getLowerBound() { return lowerBound; }
+
+  public double getUpperBound() { return upperBound; }
+
   public double distanceTo(DSTSlidingWindow other)
   {
     if (other.size != size)
-      throw new IllegalArgumentException("can not compare dst spectrum for windows of different size");
+      throw new IllegalArgumentException("can not compare spectrum for windows of different size");
     double sum = 0.0;
     for (int i = 0; i < size; i++) {
-      double diff = dstWindow[i].getLength() - other.dstWindow[i].getLength();
+      double diff = window[i].getLength() - other.window[i].getLength();
       sum += diff * diff;
     }
     return sum;
@@ -128,19 +126,19 @@ public class DSTSlidingWindow implements SlidingWindowTransform
   {
     Complex insertSample = ComplexFactory.createFromCartesian(sample, 0.0);
     for (int i = 0; i < size; i++) {
-      dstWindow[i].mul(signalShift[i]);
-      dstWindow[i].add(insertSample);
+      window[i].mul(signalShift[i]);
+      window[i].add(insertSample);
       MutableComplex tmp =
 	ComplexFactory.createMutableFromCartesian(signalShift[i]);
       tmp.mul(insertSample);
-      dstWindow[i].sub(tmp);
+      window[i].sub(tmp);
     }
   }
 
   public Complex getLine(int index)
   {
     assert index >= 0 && index < size : "index out of range";
-    return dstWindow[index];
+    return window[index];
   }
 
   public double getReconstructedSample()
@@ -155,7 +153,7 @@ public class DSTSlidingWindow implements SlidingWindowTransform
     MutableComplex sample = ComplexFactory.createMutableFromCartesian(0.0);
     for (int i = 0; i < size; i++) {
       MutableComplex line =
-	ComplexFactory.createMutableFromCartesian(dstWindow[i]);
+	ComplexFactory.createMutableFromCartesian(window[i]);
       if (filter != null) {
 	Complex transferValue =
 	  ComplexFactory.createFromCartesian(filter.getTransferValue(i));
