@@ -1,6 +1,6 @@
 /*
  * DST.java
- * (C) 2010 by
+ * (C) 2010, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -24,14 +24,20 @@
  * $Date$
  * $Id$
  */
-
 package org.soundpaint.dst;
 
-public class DST {
+public class DST
+{
+  private final DSTSlidingWindow window;
   private boolean frozen;
-  private DSTSlidingWindow window;
 
-  public DST(int resolution) {
+  private DST()
+  {
+    throw new UnsupportedOperationException("unsupported empty constructor");
+  }
+
+  public DST(final int resolution)
+  {
     window = new DSTSlidingWindow(resolution);
     frozen = false;
   }
@@ -40,7 +46,8 @@ public class DST {
    * Add the next sample from the slice for building the fingerprint
    * of the associated slice.
    */
-  public void addSample(double sample) {
+  public void addSample(final double sample)
+  {
     if (frozen)
       throw new IllegalStateException("already frozen");
     window.putBin(sample);
@@ -49,13 +56,15 @@ public class DST {
   /**
    * Turns this object into an immutable state.
    */
-  public void freeze() {
+  public void freeze()
+  {
     if (frozen)
       throw new IllegalStateException("already frozen");
     frozen = true;
   }
 
-  public double distanceTo(DST other) {
+  public double distanceTo(final DST other)
+  {
     if (!frozen)
       throw new IllegalStateException("need to freeze before evaluation");
     return window.distanceTo(other.window);

@@ -1,6 +1,6 @@
 /*
  * FiniteWave.java
- * (C) 2010 by
+ * (C) 2010, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -32,14 +32,17 @@ import java.io.IOException;
  * A finite wave is a wave whose method @code{eof()} is guaranteed to
  * eventually return the value @code{true}.
  */
-public abstract class FiniteWave implements Wave {
+public abstract class FiniteWave implements Wave
+{
   private long position = 0;
 
   public abstract long getTotalNumberOfSamples();
 
-  protected abstract double getNextSample(long position) throws IOException;
+  protected abstract double getNextSample(final long position)
+    throws IOException;
 
-  public double getNextSample() throws IOException {
+  public double getNextSample() throws IOException
+  {
     return getNextSample(position++);
   }
 
@@ -47,14 +50,15 @@ public abstract class FiniteWave implements Wave {
    * Returns the number of samples that have been fetched from this
    * wave so far.
    */
-  public long getPosition() {
+  public long getPosition()
+  {
     return position;
   }
 
   /**
    * Skips @code{n} samples.
    */
-  abstract void skip(long n) throws IOException;
+  abstract void skip(final long n) throws IOException;
 }
 
 /*

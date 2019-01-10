@@ -1,6 +1,6 @@
 /*
  * PPMStreamOutput.java
- * (C) 2009, 2010 by
+ * (C) 2009, 2010, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -31,13 +31,14 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
-public class PPMStreamOutput {
+public class PPMStreamOutput
+{
   private final PrintWriter out;
   private final int width, height;
   private int count;
 
   public PPMStreamOutput(final String filename,
-			 final int width, final int height)
+                         final int width, final int height)
     throws IOException
   {
     this.width = width;
@@ -56,12 +57,12 @@ public class PPMStreamOutput {
     out.printf("%4d%c", value, separator);
   }
 
-  private final static double invDegree = 1.0 / 360.0;
-  private final static double rad2grad = 180.0 / Math.PI;
-  private final static double sixthCycle =  1.0 / 60.0;
+  private static final double invDegree = 1.0 / 360.0;
+  private static final double rad2grad = 180.0 / Math.PI;
+  private static final double sixthCycle =  1.0 / 60.0;
 
   public void putPixel(final double hue, final double saturation,
-		       final double value)
+                       final double value)
     throws IOException
   {
     /* implementation of this method follows the algorithm
@@ -148,17 +149,19 @@ public class PPMStreamOutput {
     putValue(blue, separator);
   }
 
-  public void close() throws IOException {
+  public void close() throws IOException
+  {
     if (count < (width * height)) {
       System.err.println("PPMStreamOutput: Warning: " +
-			 "closing incomplete image: " +
-			 count + " < " + (width * height));
+                         "closing incomplete image: " +
+                         count + " < " + (width * height));
     }
     out.printf("\n");
     out.close();
   }
 
-  public void finalize() throws IOException {
+  public void finalize() throws IOException
+  {
     close();
   }
 }

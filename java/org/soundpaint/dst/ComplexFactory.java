@@ -1,6 +1,6 @@
 /*
  * ComplexFactory.java
- * (C) 2009, 2010, 2011, 2012, 2015 by
+ * (C) 2009, 2010, 2011, 2012, 2015, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -64,16 +64,19 @@ public class ComplexFactory
     return AbstractComplex.fromCartesian(prototype, true);
   }
 
-  public static MutableComplex createMutableFromCartesian(final Complex prototype) {
+  public static MutableComplex createMutableFromCartesian(final Complex prototype)
+  {
     return AbstractComplex.fromCartesian(prototype, false);
   }
 
-  public static Complex createFromPolar(final double phi, final double length) {
+  public static Complex createFromPolar(final double phi, final double length)
+  {
     return AbstractComplex.fromPolar(phi, length, true);
   }
 
   public static MutableComplex createMutableFromPolar(final double phi,
-                                                      final double length) {
+                                                      final double length)
+  {
     return AbstractComplex.fromPolar(phi, length, false);
   }
 }

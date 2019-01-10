@@ -1,6 +1,6 @@
 /*
  * WaveFileReader.java
- * (C) 2009 by
+ * (C) 2009, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -34,7 +34,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class WaveFileReader extends FiniteWave {
+public class WaveFileReader extends FiniteWave
+{
   private final static double PCM16_INV_RADIUS = 1.0 / 32768.0;
   private /*final*/ double SAMPLE_SCALE;
   private AudioInputStream in;
@@ -45,13 +46,13 @@ public class WaveFileReader extends FiniteWave {
   private boolean hasMoreSamples;
   private double lookAhead;
 
-  public WaveFileReader(String filename)
+  public WaveFileReader(final String filename)
     throws IOException
   {
     this(filename, true);
   }
 
-  public WaveFileReader(String filename, boolean averageChannels)
+  public WaveFileReader(final String filename, final boolean averageChannels)
     throws IOException
   {
     this.filename = filename;
@@ -59,50 +60,51 @@ public class WaveFileReader extends FiniteWave {
     init();
   }
 
-  private void init() throws IOException {
+  private void init() throws IOException
+  {
     try {
       if (in != null) {
-	in.close();
+        in.close();
       }
-      File file = new File(filename);
+      final File file = new File(filename);
       if (!file.exists())
         throw new IOException(filename + ": file not found");
       if (!file.canRead())
         throw new IOException(filename + ": file not readable");
       in = AudioSystem.getAudioInputStream(file);
-    } catch (UnsupportedAudioFileException e) {
+    } catch (final UnsupportedAudioFileException e) {
       throw new IOException(filename + ": " +
-			    "unsupported audio format", e);
+                            "unsupported audio format", e);
     }
-    AudioFormat fmt = in.getFormat();
+    final AudioFormat fmt = in.getFormat();
     if (fmt.getSampleSizeInBits() != 16) {
       throw new IOException(filename + ": " +
-			    "unsupported audio format: " +
-			    "sample size in bits must be 16");
+                            "unsupported audio format: " +
+                            "sample size in bits must be 16");
     }
     if (fmt.getEncoding() != AudioFormat.Encoding.PCM_SIGNED) {
       throw new IOException(filename + ": " +
-			    "unsupported audio format: " +
-			    "encoding must be PCM signed");
+                            "unsupported audio format: " +
+                            "encoding must be PCM signed");
     }
     if (fmt.isBigEndian()) {
       throw new IOException(filename + ": " +
-			    "unsupported audio format: " +
-			    "encoding must be little endian");
+                            "unsupported audio format: " +
+                            "encoding must be little endian");
     }
     channels = fmt.getChannels();
     if (channels < 1) {
       throw new IOException(filename + ": " +
-			    "unsupported audio format: " +
-			    "invalid number of channels: " + channels);
+                            "unsupported audio format: " +
+                            "invalid number of channels: " + channels);
     }
     if (averageChannels) {
       SAMPLE_SCALE = PCM16_INV_RADIUS / channels;
     } else {
       if (channels > 1) {
-	System.err.println(filename + ": " +
-			   "Warning: audio format is not mono - " +
-			   "considering 1st channel only");
+        System.err.println(filename + ": " +
+                           "Warning: audio format is not mono - " +
+                           "considering 1st channel only");
       }
       SAMPLE_SCALE = PCM16_INV_RADIUS;
     }
@@ -111,69 +113,78 @@ public class WaveFileReader extends FiniteWave {
     lookAhead = prepareLookAhead(0);
   }
 
-  private final static int META_DATA_LENGTH = 44;
+  private static final int META_DATA_LENGTH = 44;
 
-  public long getTotalNumberOfSamples() {
-    long fileLength = new File(filename).length();
+  public long getTotalNumberOfSamples()
+  {
+    final long fileLength = new File(filename).length();
     return (fileLength - META_DATA_LENGTH) / channels / 2;
   }
 
-  public boolean eof() throws IOException {
+  public boolean eof() throws IOException
+  {
     return !hasMoreSamples;
   }
 
-  protected double getNextSample(long position) throws IOException {
-    double nextSample = lookAhead;
+  protected double getNextSample(final long position) throws IOException
+  {
+    final double nextSample = lookAhead;
     lookAhead = prepareLookAhead(position);
     return nextSample;
   }
 
-  private double prepareLookAhead(long position) throws IOException {
-    int intSample = 0;
-    int bytes = in.read(sample, 0, 2 * channels);
+  private double prepareLookAhead(final long position) throws IOException
+  {
+    final int bytes = in.read(sample, 0, 2 * channels);
     if (bytes < 2 * channels) {
       hasMoreSamples = false;
       return 0.0;
     }
+    int intSample = 0;
     if (averageChannels) {
       for (int i = 0; i < 2 * channels; i += 2) {
-	int lowByte = sample[i] & 0xff; // unsigned LSB
-	int highByte = sample[i + 1]; // signed MSB
-	intSample += highByte * 256 + lowByte;
+        final int lowByte = sample[i] & 0xff; // unsigned LSB
+        final int highByte = sample[i + 1]; // signed MSB
+        intSample += highByte * 256 + lowByte;
       }
     } else {
-      int lowByte = sample[0] & 0xff; // unsigned LSB
-      int highByte = sample[1]; // signed MSB
+      final int lowByte = sample[0] & 0xff; // unsigned LSB
+      final int highByte = sample[1]; // signed MSB
       intSample += highByte * 256 + lowByte;
     }
     return intSample * SAMPLE_SCALE;
   }
 
-  public void reset() throws IOException {
+  public void reset() throws IOException
+  {
     boolean retry = false;
     do {
       retry = false;
       try {
-	init();
-      } catch (FileNotFoundException e) {
-	System.out.println("[garbage collecting...]");
-	System.gc();
-	try  {
-	  Thread.sleep(1000);
-	} catch (Exception f) {}
-	retry = true;
+        init();
+      } catch (final FileNotFoundException e) {
+        System.out.println("[garbage collecting...]");
+        System.gc();
+        try  {
+          Thread.sleep(1000);
+        } catch (final Exception f) {
+          // ignore
+        }
+        retry = true;
       }
     } while (retry);
   }
 
-  public void skip(long n) throws IOException {
-    long skipped = in.skip(n * 2 * channels) / (2 * channels);
+  public void skip(final long n) throws IOException
+  {
+    final long skipped = in.skip(n * 2 * channels) / (2 * channels);
     if (skipped != n)
       throw new IOException("skip failed: skipped " + skipped +
-			    " samples");
+                            " samples");
   }
 
-  public void close() throws IOException {
+  public void close() throws IOException
+  {
     in.close();
   }
 }

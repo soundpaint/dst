@@ -1,6 +1,6 @@
 /*
  * ProgressDisplay.java
- * (C) 2017 by
+ * (C) 2017, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -79,7 +79,7 @@ public class ProgressDisplay implements Runnable
         System.out.print(progressInfo.getProgressDisplayValue() + "\r");
         try {
           Thread.sleep(500);
-        } catch (Exception e) {
+        } catch (final Exception e) {
           // ignore
         }
       }

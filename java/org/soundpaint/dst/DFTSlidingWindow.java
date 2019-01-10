@@ -1,6 +1,6 @@
 /*
  * DFTSlidingWindow.java
- * (C) 2009, 2017 by
+ * (C) 2009, 2017, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -30,30 +30,33 @@ import java.io.PrintStream;
 
 public class DFTSlidingWindow implements SlidingWindowTransform
 {
-  public final static double DEFAULT_LOWER_BOUND = 0.001;
-  public final static double DEFAULT_UPPER_BOUND = 0.2;
+  public static final double DEFAULT_LOWER_BOUND = 0.001;
+  public static final double DEFAULT_UPPER_BOUND = 0.2;
 
-  private int size;
-  private double lowerBound, upperBound;
-  private MutableComplex window[];
-  private Complex signalWindow[];
-  private Complex signalShift[];
-  private Complex signalReverseShift[];
+  private final int size;
+  private final double lowerBound, upperBound;
+  private final MutableComplex window[];
+  private final Complex signalWindow[];
+  private final Complex signalShift[];
+  private final Complex signalReverseShift[];
   private int slidePos;
 
-  private DFTSlidingWindow() {}
+  private DFTSlidingWindow()
+  {
+    throw new UnsupportedOperationException("unsupported empty constructor");
+  }
 
-  public DFTSlidingWindow(int size)
+  public DFTSlidingWindow(final int size)
   {
     this(size, DEFAULT_LOWER_BOUND, DEFAULT_UPPER_BOUND);
   }
 
-  public DFTSlidingWindow(int size,
-                          double lowerBound, double upperBound)
+  public DFTSlidingWindow(final int size,
+                          final double lowerBound, final double upperBound)
   {
-    this();
-    if (size <= 0)
+    if (size <= 0) {
       throw new IllegalArgumentException("window size <= 0");
+    }
     this.size = size;
     this.lowerBound = lowerBound;
     this.upperBound = upperBound;
@@ -66,62 +69,73 @@ public class DFTSlidingWindow implements SlidingWindowTransform
       signalWindow[i] = ComplexFactory.createFromCartesian(0.0);
     }
     signalShift = new Complex[size];
-    double bandWidthNatural = Math.log(upperBound / lowerBound);
+    final double bandWidthNatural = Math.log(upperBound / lowerBound);
     for (int i = 0; i < size; i++) {
-      double frac =
-	lowerBound * Math.exp(((double)i) / size * bandWidthNatural);
+      final double frac =
+        lowerBound * Math.exp(((double)i) / size * bandWidthNatural);
       signalShift[i] =
-	ComplexFactory.createFromPolar(1.0, 2.0 * Math.PI * frac);
+        ComplexFactory.createFromPolar(1.0, 2.0 * Math.PI * frac);
     }
     signalReverseShift = new Complex[size];
     for (int i = 0; i < size; i++) {
-      double frac =
-	lowerBound * Math.exp(((double)i) / size * bandWidthNatural);
+      final double frac =
+        lowerBound * Math.exp(((double)i) / size * bandWidthNatural);
       signalReverseShift[i] =
-	ComplexFactory.createFromPolar(1.0, -2.0 * Math.PI * frac);
+        ComplexFactory.createFromPolar(1.0, -2.0 * Math.PI * frac);
     }
     slidePos = 0;
   }
 
-  public void printInfo(PrintStream out, double samplingFrequency)
+  public void printInfo(final PrintStream out, final double samplingFrequency)
   {
-    double bandWidthNatural = Math.log(upperBound / lowerBound);
-    double bandWidthInOctaves = bandWidthNatural / Math.log(2.0);
-    double bandWidthInCent = bandWidthInOctaves * 1200.0;
-    double resolution = bandWidthInCent / size;
+    final double bandWidthNatural = Math.log(upperBound / lowerBound);
+    final double bandWidthInOctaves = bandWidthNatural / Math.log(2.0);
+    final double bandWidthInCent = bandWidthInOctaves * 1200.0;
+    final double resolution = bandWidthInCent / size;
     out.println("sampling frequency [Hz]: " + samplingFrequency);
     out.println("spectral lines [#]: " + size);
     out.println("lower frequency limit [Hz]: " +
-		lowerBound * samplingFrequency);
+                lowerBound * samplingFrequency);
     out.println("upper frequency limit [Hz]: " +
-		upperBound * samplingFrequency);
+                upperBound * samplingFrequency);
     out.println("band width [octaves]: " + bandWidthInOctaves);
     out.println("band width [cent]: " + bandWidthInCent);
     out.println("resolution [cent per spectral line]: " + resolution);
   }
 
-  public int getSize() { return size; }
-
-  public double getLowerBound() { return lowerBound; }
-
-  public double getUpperBound() { return upperBound; }
-
-  public double distanceTo(DFTSlidingWindow other)
+  public int getSize()
   {
-    if (other.size != size)
+    return size;
+  }
+
+  public double getLowerBound()
+  {
+    return lowerBound;
+  }
+
+  public double getUpperBound()
+  {
+    return upperBound;
+  }
+
+  public double distanceTo(final DFTSlidingWindow other)
+  {
+    if (other.size != size) {
       throw new IllegalArgumentException("can not compare spectrum for windows of different size");
+    }
     double sum = 0.0;
     for (int i = 0; i < size; i++) {
-      double diff = window[i].getLength() - other.window[i].getLength();
+      final double diff = window[i].getLength() - other.window[i].getLength();
       sum += diff * diff;
     }
     return sum;
   }
 
-  public void putBin(double sample)
+  public void putBin(final double sample)
   {
-    Complex insertSample = ComplexFactory.createFromCartesian(sample, 0.0);
-    Complex removeSample = signalWindow[slidePos];
+    final Complex insertSample =
+      ComplexFactory.createFromCartesian(sample, 0.0);
+    final Complex removeSample = signalWindow[slidePos];
     signalWindow[slidePos] = insertSample;
     slidePos++;
     slidePos %= size;
@@ -132,9 +146,11 @@ public class DFTSlidingWindow implements SlidingWindowTransform
     }
   }
 
-  public Complex getLine(int index)
+  public Complex getLine(final int index)
   {
-    assert index >= 0 && index < size : "index out of range";
+    if ((index < 0) || (index >= size)) {
+      throw new IllegalArgumentException("index out of range");
+    }
     return window[index];
   }
 
@@ -143,19 +159,21 @@ public class DFTSlidingWindow implements SlidingWindowTransform
     return getReconstructedSample(null);
   }
 
-  public double getReconstructedSample(TransferFunction filter)
+  public double getReconstructedSample(final TransferFunction filter)
   {
-    assert
-      (filter == null) || (filter.getLength() == size) : "bad filter length";
-    MutableComplex sample = ComplexFactory.createMutableFromCartesian(0.0);
+    if ((filter != null) && (filter.getLength() != size)) {
+      throw new IllegalArgumentException("bad filter length");
+    }
+    final MutableComplex sample =
+      ComplexFactory.createMutableFromCartesian(0.0);
     for (int i = 0; i < size; i++) {
-      MutableComplex line =
-	ComplexFactory.createMutableFromCartesian(window[i]);
+      final MutableComplex line =
+        ComplexFactory.createMutableFromCartesian(window[i]);
       line.mul(signalReverseShift[i]);
       if (filter != null) {
-	Complex transferValue =
-	  ComplexFactory.createFromCartesian(filter.getTransferValue(i));
-	line.mul(transferValue);
+        final Complex transferValue =
+          ComplexFactory.createFromCartesian(filter.getTransferValue(i));
+        line.mul(transferValue);
       }
       sample.add(line);
     }

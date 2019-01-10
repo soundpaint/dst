@@ -1,6 +1,6 @@
 /*
  * SlidingWindowTransform.java
- * (C) 2010 by
+ * (C) 2010, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -28,35 +28,35 @@ package org.soundpaint.dst;
 
 import java.io.PrintStream;
 
-public interface SlidingWindowTransform {
-
+public interface SlidingWindowTransform
+{
   /**
    * Returns the window size.
    */
-  public int getSize();
+  int getSize();
 
   /**
    * Pretty print info about this transform when using it with the
    * specified sampling frequency.
    */
-  public void printInfo(PrintStream out, double samplingFrequency);
+  void printInfo(final PrintStream out, final double samplingFrequency);
 
   /**
    * Puts in the next sample and moves forward the sliding window by
    * one bin.
    */
-  public void putBin(double sample);
+  void putBin(final double sample);
 
   /**
    * Returns the spectral line with the specified index as complex
    * value that represents amplitude and phase of the spectral line.
    */
-  public Complex getLine(int index);
+  Complex getLine(final int index);
 
   /**
    * Returns the normalized sum of the spectrum.
    */
-  public double getReconstructedSample();
+  double getReconstructedSample();
 
   /**
    * Applies the specified filter function onto the spectrum and then
@@ -65,7 +65,7 @@ public interface SlidingWindowTransform {
    * <code>null</code>, no filter is applied; i.e. the method behaves
    * as if an identity function would be passed as filter.
    */
-  public double getReconstructedSample(TransferFunction filter);
+  double getReconstructedSample(final TransferFunction filter);
 }
 
 /*

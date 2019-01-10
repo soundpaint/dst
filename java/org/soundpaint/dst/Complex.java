@@ -1,6 +1,6 @@
 /*
  * Complex.java
- * (C) 2009, 2010, 2011, 2012, 2015 by
+ * (C) 2009, 2010, 2011, 2012, 2015, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -36,21 +36,21 @@ public interface Complex
   public static final Complex IMAGINARY_UNIT =
     ComplexFactory.createFromCartesian(0.0, 1.0);
 
-  public double getRealPart();
+  double getRealPart();
 
-  public double getImaginaryPart();
+  double getImaginaryPart();
 
-  public double getNorm();
+  double getNorm();
 
-  public double getLength();
+  double getLength();
 
-  public double getPhi();
+  double getPhi();
 
-  public boolean equals(final Object obj);
+  boolean equals(final Object obj);
 
-  public String toPolarString();
+  String toPolarString();
 
-  public String toString();
+  String toString();
 }
 
 /*

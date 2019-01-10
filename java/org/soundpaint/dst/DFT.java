@@ -1,6 +1,6 @@
 /*
  * DFT.java
- * (C) 2010 by
+ * (C) 2010, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -24,14 +24,20 @@
  * $Date$
  * $Id$
  */
-
 package org.soundpaint.dst;
 
-public class DFT {
+public class DFT
+{
+  private final DFTSlidingWindow window;
   private boolean frozen;
-  private DFTSlidingWindow window;
 
-  public DFT(int resolution) {
+  private DFT()
+  {
+    throw new UnsupportedOperationException("unsupported empty constructor");
+  }
+
+  public DFT(final int resolution)
+  {
     window = new DFTSlidingWindow(resolution);
     frozen = false;
   }
@@ -40,7 +46,8 @@ public class DFT {
    * Add the next sample from the slice for building the fingerprint
    * of the associated slice.
    */
-  public void addSample(double sample) {
+  public void addSample(final double sample)
+  {
     if (frozen)
       throw new IllegalStateException("already frozen");
     window.putBin(sample);
@@ -49,13 +56,15 @@ public class DFT {
   /**
    * Turns this object into an immutable state.
    */
-  public void freeze() {
+  public void freeze()
+  {
     if (frozen)
       throw new IllegalStateException("already frozen");
     frozen = true;
   }
 
-  public double distanceTo(DFT other) {
+  public double distanceTo(final DFT other)
+  {
     if (!frozen)
       throw new IllegalStateException("need to freeze before evaluation");
     return window.distanceTo(other.window);

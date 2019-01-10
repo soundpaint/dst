@@ -1,6 +1,6 @@
 /*
  * MutableComplex.java
- * (C) 2009, 2010, 2011, 2012 by
+ * (C) 2009, 2010, 2011, 2012, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -28,30 +28,30 @@ package org.soundpaint.dst;
 
 public interface MutableComplex extends Complex
 {
-  public void copyFrom(final Complex other);
-  public void setRealPart(final double real);
-  public void setImaginaryPart(final double imaginary);
-  public void setCartesianCoordinates(final double real,
-                                      final double imaginary);
-  public void setPolarCoordinates(final double phi, final double length);
-  public void clear();
-  public void setLength(final double length);
-  public void setPhi(final double phi);
-  public void neg();
-  public void conjugate();
-  public void add(final double real);
-  public void add(final double real, final double imaginary);
-  public void add(final Complex other);
-  public void sub(final double real);
-  public void sub(final double real, final double imaginary);
-  public void sub(final Complex other);
-  public void mul(final double real);
-  public void mul(final double real, final double imaginary);
-  public void mul(final Complex other);
-  public void inv();
-  public void div(final double real);
-  public void div(final double real, final double imaginary);
-  public void div(final Complex other);
+  void copyFrom(final Complex other);
+  void setRealPart(final double real);
+  void setImaginaryPart(final double imaginary);
+  void setCartesianCoordinates(final double real,
+                               final double imaginary);
+  void setPolarCoordinates(final double phi, final double length);
+  void clear();
+  void setLength(final double length);
+  void setPhi(final double phi);
+  void neg();
+  void conjugate();
+  void add(final double real);
+  void add(final double real, final double imaginary);
+  void add(final Complex other);
+  void sub(final double real);
+  void sub(final double real, final double imaginary);
+  void sub(final Complex other);
+  void mul(final double real);
+  void mul(final double real, final double imaginary);
+  void mul(final Complex other);
+  void inv();
+  void div(final double real);
+  void div(final double real, final double imaginary);
+  void div(final Complex other);
 }
 
 /*

@@ -1,6 +1,6 @@
 /*
  * SinoidalSynthWave.java
- * (C) 2017 by
+ * (C) 2017, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -26,11 +26,11 @@
  */
 package org.soundpaint.dst;
 
-public class SinoidalSynthWave implements Wave {
-
+public class SinoidalSynthWave implements Wave
+{
   private final double[] deltaPhases;
-  private double[] initialPhases;
-  private double[] phases;
+  private final double[] initialPhases;
+  private final double[] phases;
 
   public SinoidalSynthWave(final double[] deltaPhases,
                            final double[] initialPhases) {

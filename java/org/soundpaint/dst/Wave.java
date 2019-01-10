@@ -1,6 +1,6 @@
 /*
  * Wave.java
- * (C) 2010 by
+ * (C) 2010, 2019 by
  * Jürgen Reuter <http://www.juergen-reuter.de/>
  *
  * Project Website: http://www.soundpaint.org/spectral-transform/
@@ -31,7 +31,8 @@ import java.io.IOException;
 /**
  * A wave produces a (possibly finite) series of sample values.
  */
-public interface Wave {
+public interface Wave
+{
   /**
    * Resets this wave to its start, such that the next sample returned
    * will be again the first one.
