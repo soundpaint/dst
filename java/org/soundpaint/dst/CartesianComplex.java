@@ -128,36 +128,7 @@ public class CartesianComplex extends AbstractComplex
 
   public double getPhi()
   {
-    final double phi;
-    // weigh (abs(real) / abs(imaginary)) for better numerical
-    // stability
-    if (Math.abs(real) > Math.abs(imaginary)) {
-      final double unboundPhi = Math.atan(imaginary / real);
-      if (real < 0.0) {
-        if (unboundPhi < 0.0) {
-          phi = unboundPhi + Math.PI;
-        } else {
-          phi = unboundPhi - Math.PI;
-        }
-      } else {
-        phi = unboundPhi;
-      }
-    } else if (imaginary != 0.0) {
-      final double unboundPhi = HALF_PI - Math.atan(real / imaginary);
-      if (imaginary < 0.0) {
-        if (unboundPhi < 0.0) {
-          phi = unboundPhi + Math.PI;
-        } else {
-          phi = unboundPhi - Math.PI;
-        }
-      } else {
-        phi = unboundPhi;
-      }
-    } else {
-      // case (0.0, 0.0) => undefined phi
-      phi = Double.NaN;
-    }
-    return phi;
+    return Math.atan2(imaginary, real);
   }
 
   public void setPhi(final double phi)

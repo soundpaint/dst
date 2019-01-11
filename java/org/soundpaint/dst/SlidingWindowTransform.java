@@ -31,6 +31,20 @@ import java.io.PrintStream;
 public interface SlidingWindowTransform
 {
   /**
+   * Default value for the lower bound frequency of the frequency
+   * range to be considered, specified as fraction of the sampling
+   * frequency.
+   */
+  public static final double DEFAULT_LOWER_BOUND = 0.001;
+
+  /**
+   * Default value for the upper bound frequency of the frequency
+   * range to be considered, specified as fraction of the sampling
+   * frequency.
+   */
+  public static final double DEFAULT_UPPER_BOUND = 0.2; // [samplingFrequency]
+
+  /**
    * Returns the window size.
    */
   int getSize();

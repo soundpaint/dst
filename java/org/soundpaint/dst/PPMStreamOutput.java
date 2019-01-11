@@ -152,9 +152,9 @@ public class PPMStreamOutput
   public void close() throws IOException
   {
     if (count < (width * height)) {
-      System.err.println("PPMStreamOutput: Warning: " +
-                         "closing incomplete image: " +
-                         count + " < " + (width * height));
+      throw new IllegalStateException("PPMStreamOutput: " +
+                                      "closing incomplete image: " +
+                                      count + " < " + (width * height));
     }
     out.printf("\n");
     out.close();

@@ -30,9 +30,6 @@ import java.io.PrintStream;
 
 public class DFTSlidingWindow implements SlidingWindowTransform
 {
-  public static final double DEFAULT_LOWER_BOUND = 0.001;
-  public static final double DEFAULT_UPPER_BOUND = 0.2;
-
   private final int size;
   private final double lowerBound, upperBound;
   private final MutableComplex window[];

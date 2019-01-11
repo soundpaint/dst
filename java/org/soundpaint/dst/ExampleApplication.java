@@ -32,9 +32,6 @@ import java.util.Date;
 
 public class ExampleApplication
 {
-  private static final double[] μ0s =
-  { 0.90000, 0.99000, 0.99270, 0.99900, 0.99990, 0.99999 };
-
   public static final double SAMPLE_FREQUENCY = 44100.0; // [Hz]
   public static final Wave DEFAULT_WAVE =
     new SinoidalSynthWave(SAMPLE_FREQUENCY, new double[] {440.0, 880.0});
@@ -46,9 +43,8 @@ public class ExampleApplication
   private static final double doublePI = 2.0 * Math.PI;
   private static final double invPI = 1.0 / Math.PI;
 
-  private static final boolean CREATE_DFT_PPM = true;
-  private static final boolean CREATE_DST_PPM = true;
-  private static final boolean CREATE_PLOT = false;
+  private static final boolean CREATE_PPM = true;
+  private static final boolean CREATE_PLOT = true;
 
   private Date startDate, stopDate;
 
@@ -121,10 +117,10 @@ public class ExampleApplication
     }
 
     private void check() {
-      if (dst && dft) {
+      if (dft && dst) {
         throw new IllegalArgumentException("--dst and --dft can not be specified together");
       }
-      if (!dst && !dft) {
+      if (!dft && !dst) {
         throw new IllegalArgumentException("either --dft or --dst must be specified");
       }
       if (!dst && μ0Parsed) {
@@ -176,29 +172,27 @@ public class ExampleApplication
     }
   }
 
-  public void createDFTView(final String dftImageFileName, final Wave wave)
+  public void createDFTView(final String imageFileName, final Wave wave)
     throws IOException
   {
     wave.reset();
-    final PPMStreamOutput imageDFTStream;
+    final PPMStreamOutput imageStream;
     final PrintWriter imageWavePlotter;
     if (CREATE_PLOT) {
       String imageWavePlotFilename =
         IMAGE_WAVE_PLOT_FILENAME; // TODO: Add as command line arg
       System.out.printf("[writing wave plot data to file '%s']\r\n",
                         imageWavePlotFilename);
-      imageWavePlotter =
-        new PrintWriter(imageWavePlotFilename);
+      imageWavePlotter = new PrintWriter(imageWavePlotFilename);
     }
-    if (CREATE_DFT_PPM) {
+    if (CREATE_PPM) {
       System.out.printf("[writing DFT spectrum image to file '%s']\r\n",
-                        dftImageFileName);
-      imageDFTStream =
-        new PPMStreamOutput(dftImageFileName, WINDOW_SIZE, ROUNDS);
+                        imageFileName);
+      imageStream = new PPMStreamOutput(imageFileName, WINDOW_SIZE, ROUNDS);
     }
-    final SlidingWindowTransform dftSlidingWindow =
+    final SlidingWindowTransform slidingWindow =
       new DFTSlidingWindow(WINDOW_SIZE);
-    dftSlidingWindow.printInfo(System.out, SAMPLE_FREQUENCY);
+    slidingWindow.printInfo(System.out, SAMPLE_FREQUENCY);
     final ProgressInfo progressInfo = new ProgressInfo();
     final ProgressDisplay progressDisplay = new ProgressDisplay(progressInfo);
     new Thread(progressDisplay).start();
@@ -206,57 +200,55 @@ public class ExampleApplication
          progressInfo.sampleCount < ROUNDS;
          progressInfo.sampleCount++) {
       final double originalSample = wave.getNextSample();
-      dftSlidingWindow.putBin(originalSample);
-      if (CREATE_DFT_PPM) {
-        for (int i = 0; i < (dftSlidingWindow.getSize()); i++) {
-          final Complex line = dftSlidingWindow.getLine(i);
+      slidingWindow.putBin(originalSample);
+      if (CREATE_PPM) {
+        for (int i = 0; i < (slidingWindow.getSize()); i++) {
+          final Complex line = slidingWindow.getLine(i);
           final double value = line.getLength();
           final double hue = (value - 0.5) * doublePI;
-          imageDFTStream.putPixel(hue, 1.0, 0.003 * value);
+          imageStream.putPixel(hue, 1.0, 0.003 * value);
         }
       }
-      final double reconstructedDFTSample =
-        dftSlidingWindow.getReconstructedSample();
       if (CREATE_PLOT) {
+        final double reconstructedSample =
+          slidingWindow.getReconstructedSample();
         imageWavePlotter.printf("%5d %5.3f %5.3f\r\n",
                                 progressInfo.sampleCount,
-                                originalSample, reconstructedDFTSample);
+                                originalSample, reconstructedSample);
       }
     }
     progressInfo.sampleAndHold();
     System.out.println(progressInfo.getProgressDisplayValue());
-    if (CREATE_DFT_PPM)
-      imageDFTStream.close();
+    if (CREATE_PPM)
+      imageStream.close();
     if (CREATE_PLOT)
       imageWavePlotter.close();
   }
 
-  public void createDSTView(final String dstImageFileName,
+  public void createDSTView(final String imageFileName,
                             final double μ0, final Wave wave)
     throws IOException
   {
     wave.reset();
-    final PPMStreamOutput imageDSTStream;
+    final PPMStreamOutput imageStream;
     final PrintWriter imageWavePlotter;
     if (CREATE_PLOT) {
       final String imageWavePlotFilename =
         IMAGE_WAVE_PLOT_FILENAME; // TODO: Add as command line arg
       System.out.printf("[writing wave plot data to file '%s']\r\n",
                         imageWavePlotFilename);
-      imageWavePlotter =
-        new PrintWriter(imageWavePlotFilename);
+      imageWavePlotter = new PrintWriter(imageWavePlotFilename);
     }
-    if (CREATE_DST_PPM) {
+    if (CREATE_PPM) {
       System.out.printf("[writing DST spectrum image to file '%s']\r\n",
-                        dstImageFileName);
-      imageDSTStream =
-        new PPMStreamOutput(dstImageFileName, WINDOW_SIZE, ROUNDS);
+                        imageFileName);
+      imageStream = new PPMStreamOutput(imageFileName, WINDOW_SIZE, ROUNDS);
     }
-    final SlidingWindowTransform dstSlidingWindow =
+    final SlidingWindowTransform slidingWindow =
       new DSTSlidingWindow(μ0, WINDOW_SIZE,
                            DSTSlidingWindow.DEFAULT_LOWER_BOUND,
                            DSTSlidingWindow.DEFAULT_UPPER_BOUND);
-    dstSlidingWindow.printInfo(System.out, SAMPLE_FREQUENCY);
+    slidingWindow.printInfo(System.out, SAMPLE_FREQUENCY);
     final ProgressInfo progressInfo = new ProgressInfo();
     final ProgressDisplay progressDisplay = new ProgressDisplay(progressInfo);
     new Thread(progressDisplay).start();
@@ -264,27 +256,27 @@ public class ExampleApplication
          progressInfo.sampleCount < ROUNDS;
          progressInfo.sampleCount++) {
       final double originalSample = wave.getNextSample();
-      dstSlidingWindow.putBin(originalSample);
-      if (CREATE_DST_PPM) {
-        for (int i = 0; i < (dstSlidingWindow.getSize()); i++) {
-          final Complex line = dstSlidingWindow.getLine(i);
+      slidingWindow.putBin(originalSample);
+      if (CREATE_PPM) {
+        for (int i = 0; i < (slidingWindow.getSize()); i++) {
+          final Complex line = slidingWindow.getLine(i);
           final double value = line.getLength();
           final double hue = (value - 0.5) * doublePI;
-          imageDSTStream.putPixel(hue, 1.0, 0.05 * value);
+          imageStream.putPixel(hue, 1.0, 0.05 * value);
         }
       }
-      final double reconstructedDSTSample =
-        dstSlidingWindow.getReconstructedSample();
       if (CREATE_PLOT) {
+        final double reconstructedSample =
+          slidingWindow.getReconstructedSample();
         imageWavePlotter.printf("%5d %5.3f %5.3f\r\n",
                                 progressInfo.sampleCount,
-                                originalSample, reconstructedDSTSample);
+                                originalSample, reconstructedSample);
       }
     }
     progressInfo.sampleAndHold();
     System.out.println(progressInfo.getProgressDisplayValue());
-    if (CREATE_DST_PPM)
-      imageDSTStream.close();
+    if (CREATE_PPM)
+      imageStream.close();
     if (CREATE_PLOT)
       imageWavePlotter.close();
   }

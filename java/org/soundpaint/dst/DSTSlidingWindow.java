@@ -39,9 +39,6 @@ public class DSTSlidingWindow implements SlidingWindowTransform
   // E.g. something like μ(FREQ) = 1.0 - Math.exp(FREQ *
   // Math.log(μ0))?
 
-  public static final double DEFAULT_LOWER_BOUND = 0.001;
-  public static final double DEFAULT_UPPER_BOUND = 0.2;
-
   private final double μ0;
   private final int size;
   private final double lowerBound, upperBound;
