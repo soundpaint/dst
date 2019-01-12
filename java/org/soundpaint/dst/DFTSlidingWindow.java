@@ -78,7 +78,8 @@ public class DFTSlidingWindow implements SlidingWindowTransform
       final double frac =
         lowerBound * Math.exp(((double)i) / size * bandWidthNatural);
       signalReverseShift[i] =
-        ComplexFactory.createFromPolar(1.0, -2.0 * Math.PI * frac);
+        ComplexFactory.createFromPolar(1.0 / (2.0 * Math.PI),
+                                       -2.0 * Math.PI * frac);
     }
     slidePos = 0;
   }

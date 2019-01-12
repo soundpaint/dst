@@ -177,7 +177,7 @@ public class DSTSlidingWindow implements SlidingWindowTransform
       }
       sample.add(line);
     }
-    sample.mul(+1.0 / size);
+    sample.mul(Math.sqrt(Math.PI) / size);
     return sample.getRealPart();
   }
 }
