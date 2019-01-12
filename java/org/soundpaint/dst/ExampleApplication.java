@@ -45,6 +45,7 @@ public class ExampleApplication
 
   private static final boolean CREATE_PPM = true;
   private static final boolean CREATE_PLOT = true;
+  private static final int PLOT_HEIGHT = 50;
 
   private Date startDate, stopDate;
 
@@ -172,6 +173,44 @@ public class ExampleApplication
     }
   }
 
+  private static double clipSample(final double sample,
+                                   final double lowerBound,
+                                   final double upperBound)
+  {
+    return
+      sample < lowerBound ? lowerBound :
+      (sample > upperBound ? upperBound : sample);
+  }
+
+  private static void putSample(final PPMStreamOutput imageStream,
+                                final int displayHeight,
+                                final double sample,
+                                final double lowerBound,
+                                final double upperBound)
+    throws IOException
+  {
+    final double clippedSample = clipSample(sample, lowerBound, upperBound);
+    final double scale = (upperBound - lowerBound) / displayHeight;
+    boolean matched = false;
+    int i;
+    for (i = 0; i < displayHeight - 1; i++) {
+      if (!matched) {
+        if (lowerBound + scale * i >= sample) {
+          matched = true;
+          break;
+        }
+      }
+      imageStream.putPixel(0, 0, 0);
+    }
+    imageStream.putPixel(255, 255, 255);
+    if (!matched) {
+      return;
+    }
+    for (i++; i < displayHeight; i++) {
+      imageStream.putPixel(0, 0, 0);
+    }
+  }
+
   public void createDFTView(final String imageFileName, final Wave wave)
     throws IOException
   {
@@ -188,7 +227,8 @@ public class ExampleApplication
     if (CREATE_PPM) {
       System.out.printf("[writing DFT spectrum image to file '%s']\r\n",
                         imageFileName);
-      imageStream = new PPMStreamOutput(imageFileName, WINDOW_SIZE, ROUNDS);
+      final int ppmWidth = WINDOW_SIZE + (CREATE_PLOT ? 2 * PLOT_HEIGHT : 0);
+      imageStream = new PPMStreamOutput(imageFileName, ppmWidth, ROUNDS);
     }
     final SlidingWindowTransform slidingWindow =
       new DFTSlidingWindow(WINDOW_SIZE);
@@ -212,6 +252,8 @@ public class ExampleApplication
       if (CREATE_PLOT) {
         final double reconstructedSample =
           slidingWindow.getReconstructedSample();
+        putSample(imageStream, PLOT_HEIGHT, originalSample, -1.0, +1.0);
+        putSample(imageStream, PLOT_HEIGHT, reconstructedSample, -1.0, +1.0);
         imageWavePlotter.printf("%5d %5.3f %5.3f\r\n",
                                 progressInfo.sampleCount,
                                 originalSample, reconstructedSample);
@@ -242,7 +284,8 @@ public class ExampleApplication
     if (CREATE_PPM) {
       System.out.printf("[writing DST spectrum image to file '%s']\r\n",
                         imageFileName);
-      imageStream = new PPMStreamOutput(imageFileName, WINDOW_SIZE, ROUNDS);
+      final int ppmWidth = WINDOW_SIZE + (CREATE_PLOT ? 2 * PLOT_HEIGHT : 0);
+      imageStream = new PPMStreamOutput(imageFileName, ppmWidth, ROUNDS);
     }
     final SlidingWindowTransform slidingWindow =
       new DSTSlidingWindow(μ0, WINDOW_SIZE,
@@ -268,6 +311,8 @@ public class ExampleApplication
       if (CREATE_PLOT) {
         final double reconstructedSample =
           slidingWindow.getReconstructedSample();
+        putSample(imageStream, PLOT_HEIGHT, originalSample, -1.0, +1.0);
+        putSample(imageStream, PLOT_HEIGHT, reconstructedSample, -1.0, +1.0);
         imageWavePlotter.printf("%5d %5.3f %5.3f\r\n",
                                 progressInfo.sampleCount,
                                 originalSample, reconstructedSample);
