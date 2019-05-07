@@ -1,7 +1,9 @@
 include ../common.mk
 ROOT=..
 BUILD_JAVA=$(BUILD)/java
-SRC = $(wildcard org/soundpaint/dst/*.java)
+SRC_DST = $(wildcard org/soundpaint/dst/*.java)
+SRC_DSTX = $(wildcard org/soundpaint/dstx/*.java)
+SRC = $(SRC_DST) $(SRC_DSTX)
 OBJ = $(patsubst %,$(BUILD_JAVA)/%,$(SRC:.java=.class))
 
 all: $(BUILD_JAVA) $(OBJ)
