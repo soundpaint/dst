@@ -186,7 +186,7 @@ letter a denoting a year), we get an extent _d_ of
 
 _d_ ≈ 93e9ca ≈ 93e9 * 3e8 m/s * 365.25 * 24 * 60 * 60 s ≈ 8.804e26m
 
-Well, _d_ ≈ 7.384e26m and _f_(_α_) ≈ 7.231e26m are pretty close,
+Well, _d_ ≈ 8.804e26m and _f_(_α_) ≈ 7.231e26m are pretty close,
 aren't they?  They are off not much more than 20% from each other,
 while spanning a range of 61 decades from _l<sub>p</sub>_ to _d_.
 
