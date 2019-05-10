@@ -3,7 +3,7 @@ package org.soundpaint.dstx;
 /**
  * Given the function
  *
- * f(α) := l_p * (1 / α) * exp(1/ α) = d
+ * f(α) := l_p * (1 / α) * exp(1 / α) = d
  *
  * this program approximates its reverse function
  *
@@ -29,7 +29,7 @@ public class SolveExpEqDouble
   private static final double L_P = 1.616e-35; // [m] Plank Length
   private static final double D_FOR_α0 = α2d(α0); // [m]
   private static final double AGE = 13.81e9; // [a]
-  private static final double EXP_NOW = 7.379e26; // [m] ≈ 78e9 LY
+  private static final double EXP_NOW = 8.8e26; // [m] ≈ 93e9 LY
   private static final double EXP_RATE = EXP_NOW / AGE; // [m/a]
 
   private double δt; // [a] delta time (years) to use for δ/δt approximation

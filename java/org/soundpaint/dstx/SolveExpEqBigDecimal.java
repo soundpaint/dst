@@ -6,7 +6,7 @@ import java.math.MathContext;
 /**
  * Given the function
  *
- * f(α) := l_p * (1 / α) * exp(1/ α) = d
+ * f(α) := l_p * (1 / α) * exp(1 / α) = d
  *
  * this program approximates its reverse function
  *
@@ -38,7 +38,7 @@ public class SolveExpEqBigDecimal
   private static final BigDecimal D_FOR_α0 = α2d(α0); // [m]
   private static final BigDecimal AGE = new BigDecimal(13.81e9); // [a]
   private static final BigDecimal EXP_NOW =
-    new BigDecimal(7.379e26); // [m] ≈ 78e9 LY
+    new BigDecimal(8.8e26); // [m] ≈ 93e9 LY
   private static final BigDecimal EXP_RATE = EXP_NOW.divide(AGE, MC); // [m/a]
 
   private BigDecimal δt; // [a] delta time (years) to use for d/dt approximation

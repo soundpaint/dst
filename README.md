@@ -124,6 +124,85 @@ Also note that the DST has some remarkable differences compared to the DFT:
 
 * The Fourier transform abstracts from the signal's _t_ parameter, such that it does not occur any more in the transformed signal.  In contrast, the DST preserves the _t_ parameter, thus keeping an additional variable in the frequency space.  This additional variable can be viewed as a _hidden variable_ (in the sense as some authors assume for Quantum mechanics) of the Fourier transform, explicitly made accessible via the DST: For any point _t1_ in time, the DST for that point can be computed solely from the DST for any earlier point _t0_ in time and the signal between these two points _t0_ and _t1_, as shown in Eqn. 24 in the paper in Sect. 4.3 “Discretization” [Reuter:2009a].  That is, the DST for _t0_ holds _all_ necessary information from the _complete_ history before _t0_ that is required for computing the DST of some later point _t1_.
 
+Purely Speculative Expression Matching
+--------------------------------------
+
+The following ideas in this section are random number and expression
+patterns that I recognized while working on the overall concepts.
+
+__DISCLAIMER:__ Please do not take these ideas as necessarily real
+physical facts, but just as inspiring ideas for working out future
+concepts.  Having that said, here we go.
+
+Remember that the non-negative parameter _μ<sub>0</sub>_ in our
+transformation serves as a constant for coupling over time, i.e. how
+fast the effect of the signal onto the spectrum decays over time.  For
+the transformation's integral to converge, this constant requires to
+have a value of less than 1.  In the course of this loose discussion
+however, just forget for a moment about this requirement.  Actually,
+we are not going to compute the transformation here, hence we do not
+need the integral to converge.
+
+In physics there is actually something like a coupling constant: the
+_fine structure constant_ _α_ ≈ 7.297353e-3.  Let's take the value of
+1 / _α_ ≈ 137.036 as value for _μ<sub>0</sub>_, even though it is not
+less than 1, but much greater than 1.  In our transformation, the
+parameter appears as part of exponent of the natural _e_ function,
+i.e. we consider the expression exp(1 / α).
+
+Next, in the paper, we reason about discretization of the
+transformation.  In physics, is there a discretization in terms of
+space?  In some sense, there probably is: The Planck length
+_l<sub>p</sub>_ ≈ 1.616e-35m.  Let us take this value as basic unit,
+i.e. as a factor multiplied with what to come next.
+
+Finally, remember that our transformation is scaled with a factor
+equal to the constant value that appears in the exponent of the _e_
+function.  Let's do this here as well, i.e. scale the expression by
+the factor (1 / _α_).
+
+So, altogether, in terms of _α_, we get the function
+
+  _f_(_α_) := _l<sub>p</sub>_ * (1 / _α_) * exp(1 / _α_)
+
+which evaluates to
+
+  _f_(_α_) ≈ 7.231e26m.
+
+Maybe think of a wave with an extremely low frequence, maybe just as
+low that is spreads out just making up a single, huge period that
+covers all of the universe that we can recognize.  The _minimum_
+extent of the universe is that of the _observable_ universe and is
+said to be around 93 billions (93 * 10<sup>9</sup>) of light-years
+[Wikimedia:2019a].  Note that physicists believe in something called
+_dark matter_ that is thought to make up maybe up to 85% of all
+matter, thus making the real size of the universe much bigger, without
+being able to quantify that size.  For the purpose of our discussion,
+let's consider just the _observable_ part of the universe, thus
+assuming an extent of roughly 93 light-years.
+
+With 1 light-year = 1ca (with letter c denoting speed of light and
+letter a denoting a year), we get an extent _d_ of
+
+_d_ ≈ 93e9ca ≈ 93e9 * 3e8 m/s * 365.25 * 24 * 60 * 60 s ≈ 8.804e26m
+
+Well, _d_ ≈ 7.384e26m and _f_(_α_) ≈ 7.231e26m are pretty close,
+aren't they?  They are off not much more than 20% from each other,
+while spanning a range of 61 decades from _l<sub>p</sub>_ to _d_.
+
+Hence, let us assume these two numbers are actually identical, and the
+difference only results from measurement tolerance.
+
+Next, we assume an _almost_ linear expansion of the universe,
+according to the Lambda-CDM model [Wikimedia:2019b], [Wikimedia:2017]
+during its age of roughly 13.8e9 years.
+
+Given these assumptions, we can compute an approximation of the
+_drift_ of the the fine structure constant over time: It should
+currently decrease by a value of roughly 3.83e-15 per year.  The
+computation is elaborated in the Java files `SolveExpEqDouble.java`
+and `SolveExpEqBigDecimal.java`, respectively.
+
 Future Work
 -----------
 
@@ -139,3 +218,16 @@ For a more comprehensive discussion of the mathematics behind the DST, see the a
 [Reuter:2009a] Jürgen Reuter.  _Considering Transient Effect in Spectrum Analysis._  In _Proceedings of the 7th International Linux Audio Conference (LAC2009)._  Instituzione Casa della Musica, Parma, Italy.  Grafiche Step, Parma, Italy, pp. 153—160, April 16th—19th, 2009.  [download](media/lac2009_spectral_transform.pdf).
 
 [Westerfeld:2018] Stefan Westerfeld.  _SpectMorph: Morphing the Timbre of Musical Instruments._  In _Proceedings of the 16th International Linux Audio Conference (LAC2018)._  c-base, Berlin.  Germany, pp. 5—12, June 7th—10th, 2018.
+
+[Wikimedia:2019a] Wikipedia, the free encyclopedia.  _Observable
+universe._ https://en.wikipedia.org/wiki/Observable_universe, April
+23, 2019.
+
+[Wikimedia:2019b] Wikipedia, the free encyclopedia.  _Lambda-CDM
+model._ https://en.wikipedia.org/wiki/Lambda-CDM_model, April 27,
+2019.
+
+[Wikimedia:2017] Wikipedia, the free encyclopedia.  _File:Mplwp
+universe scale evolution.svg._
+https://commons.wikimedia.org/wiki/File:Mplwp_universe_scale_evolution.svg,
+April 17, 2017.
