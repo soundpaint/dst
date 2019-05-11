@@ -218,6 +218,17 @@ roughly 3.83e-15 per year.__
 
 The computation is elaborated in the Java files
 `SolveExpEqDouble.java` and `SolveExpEqBigDecimal.java`, respectively.
+SolveExpEqDouble is an implementation with 64 bit floating point
+arithmetic, while SolveExpEqBigDecimal uses 128 bit resolution.  These
+two implementations help to estimate the effect of limited resolution
+onto the precision of the computed result, specifically for small
+values of δt.
+
+Also note, that the influence of the scale factor (1 / _α_) in
+function _f_(_α_) on our result is small and therefore neglectiable in
+comprarison with the exponential factor exp(1 / _α_).  That is for,
+say, a function like _g_(_α_) := _l<sub>p</sub>_ * 2π * (1 / _α_) *
+exp(1 / _α_), the approximated result still would be roughly 3.83e-15.
 
 Future Work
 -----------
