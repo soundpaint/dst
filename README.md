@@ -195,13 +195,29 @@ difference only results from measurement tolerance.
 
 Next, we assume an _almost_ linear expansion of the universe,
 according to the Lambda-CDM model [Wikimedia:2019b], [Wikimedia:2017]
-during its age of roughly 13.8e9 years.
+during its age of roughly 13.8e9 years.  In fact, current theories
+assume that the very early universe expanded more quickly, and then
+expansion slowed down, but nowadays expansion tends to slowly speed up
+again.  We assume these limited abberation from linear expansion to
+have only little effect on our computations, such that for a first
+approximation, they can be neglected.
 
-Given these assumptions, we can compute an approximation of the
-_drift_ of the the fine structure constant over time: It should
-currently decrease by a value of roughly 3.83e-15 per year.  The
-computation is elaborated in the Java files `SolveExpEqDouble.java`
-and `SolveExpEqBigDecimal.java`, respectively.
+Finally, we do not try to explicitly consider relativistic effects in
+our computations, since we think that they are either neglectible or
+already implicitly considered by using physical constants that others
+already have computed.
+
+Most of these assumptions are very audacious and may turn out to be
+completely wrong.  Nevertheless, given that all of these assumptions
+turn out to be true, we can compute an approximation of the _drift_ of
+the the fine structure constant over time:
+
+__In case all of our assumptions will hold true, we predict that the
+fine structure constant should currently decrease by a value of
+roughly 3.83e-15 per year.__
+
+The computation is elaborated in the Java files
+`SolveExpEqDouble.java` and `SolveExpEqBigDecimal.java`, respectively.
 
 Future Work
 -----------
